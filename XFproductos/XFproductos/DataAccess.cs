@@ -6,50 +6,50 @@ using System.Threading.Tasks;
 using SQLite.Net;
 using Xamarin.Forms;
 using System.IO;
-
+using System.Net;
 namespace XFproductos
 {
     class DataAccess : IDisposable
     {
-        private SQLiteConnection connection;
+        public SQLiteConnection connections;
 
         public DataAccess()
         {
             var config = DependencyService.Get<IConfig>();
-            connection = new SQLiteConnection(config.Plataforma, System.IO.Path.Combine(config.DirectorioDB, "Productos.db3"));
-            connection.CreateTable<Producto>();
+            connections = new SQLiteConnection(config.Plataforma, Path.Combine(config.DirectorioDB,"Producto.db3"));
+            connections.CreateTable<Producto>();
         }
 
         public void InsertProducto(Producto producto)
         {
-            connection.Insert(producto);
+            connections.Insert(producto);
         }
 
 
         public void UpdateProducto(Producto producto)
         {
-            connection.Update(producto);
+            connections.Update(producto);
         }
 
         public void DeleteProducto(Producto producto)
         {
-            connection.Delete(producto);
+            connections.Delete(producto);
         }
 
         public Producto GetProducto(int IDventa)
         {
-            return connection.Table<Producto>().FirstOrDefault(c => c.IDventa == IDventa);
+            return connections.Table<Producto>().FirstOrDefault(c => c.IDventa == IDventa);
         }
 
 
         public List<Producto> GetProductos()
         {
-            return connection.Table<Producto>().ToList();
+            return connections.Table<Producto>().ToList();
         }
 
         public void Dispose()
         {
-            connection.Dispose();
+            connections.Dispose();
         }
     }
 }
